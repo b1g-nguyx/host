@@ -1,0 +1,108 @@
+﻿:root {
+    --primary: #007bff;
+    --primary-foreground: #ffffff;
+    --secondary: #6c757d;
+    --secondary-foreground: #ffffff;
+    --accent: #0056b3;
+    --accent-foreground: #ffffff;
+    --background: #131f24;
+    --foreground: #343a40;
+    --card: #1f2d33ab;
+    --card-foreground: #343a40;
+    --border: #dee2e6;
+    --input: #e9ecef;
+    --ring: #007bff;
+}
+
+body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+.error-container {
+    min-height: 100vh;
+    background-color: var(--background);
+}
+
+.error-card {
+    background: var(--card);
+    padding: 3rem;
+    border-radius: 1rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+    .error-card:hover {
+        transform: translateY(-5px);
+    }
+
+.error-icon {
+    font-size: 4rem;
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+}
+
+.error-content h1 {
+    color: var(--primary);
+    font-size: 6rem;
+    margin-bottom: 1rem;
+}
+
+.error-content h2 {
+    color: var(--foreground);
+    font-weight: 600;
+}
+
+.search-box .form-control {
+    border: 2px solid var(--border);
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem 0 0 0.5rem;
+}
+
+.search-box .btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: var(--primary-foreground);
+}
+
+    .btn-primary:hover {
+        background-color: var(--accent);
+        border-color: var(--accent);
+    }
+
+.btn-outline-primary {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+    .btn-outline-primary:hover {
+        background-color: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+@media (max-width: 768px) {
+    .error-card {
+        padding: 2rem;
+    }
+
+    .error-content h1 {
+        font-size: 4rem;
+    }
+
+    .action-buttons .btn {
+        margin-bottom: 1rem;
+    }
+}

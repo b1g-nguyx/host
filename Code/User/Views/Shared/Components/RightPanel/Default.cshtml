@@ -1,0 +1,118 @@
+﻿@using ViewModel.DailyTaskProgress
+@model DailyTaskProgressViewModel
+<style>
+
+    .status-box-ls {
+        background: #1e293b;
+        border-radius: 12px;
+        padding: 20px;
+    }
+
+    .sidebar-item-ls {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        padding: 10px 15px;
+        color: white;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+        .sidebar-item-ls:hover
+       {
+            opacity: .7;
+            border: 2px solid #334155;
+        }
+
+    .task-item-ls {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+        gap: 10px;
+    }
+
+    .task-content-ls {
+        flex: 1;
+    }
+
+        .task-content-ls span {
+            font-size: 14px;
+            font-weight: 500;
+            color: white;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+    .progress {
+        height: 8px;
+        background-color: #334155;
+        border-radius: 4px;
+    }
+
+    .progress-bar {
+        height: 100%;
+        border-radius: 4px;
+    }
+
+</style>
+    <div class="status-box-ls">
+        <div class="status-box-ls text-white">
+            <p class="text-white">Xin chào, <strong class="text-white">@Model.FullName</strong>!</p>
+
+            <div class="daily-task-ls mb-4">
+                <div class="task-item-ls">
+                    <i class="bi bi-lightning-fill text-warning fs-5"></i>
+                    <div class="task-content-ls">
+                        <span>số bài học đã tham gia</span>
+                        <div class="progress">
+                            <div class="progress-bar bg-warning" style="width: @Model.ExpProgress%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="task-item-ls">
+                    <i class="bi bi-bullseye text-success fs-5"></i>
+                    <div class="task-content-ls">
+                        <span>Tiến độ học tập</span>
+                        <div class="progress">
+                            <div class="progress-bar bg-success" style="width: @Model.HighScoreProgress%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="task-item-ls">
+                    <i class="bi bi-clock text-primary fs-5"></i>
+                    <div class="task-content-ls">
+                        <span>Điểm số bài học gần nhất</span>
+                        <div class="progress">
+                            <div class="progress-bar bg-primary" style="width: @Model.StudyTimeProgress%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="status-box-ls mt-3">
+        <div class="auth-box-ls text-center mt-2">
+            <a class="btn btn-success w-100 mb-2" asp-controller="Profile" asp-action="Index">XEM HỒ SƠ</a>
+            <form method="post" id="logout-form" asp-controller="Account" asp-action="Logout">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-info w-100">ĐĂNG XUẤT</button>
+                <script>
+                    document.getElementById("logout-form").addEventListener("submit", function () {
+                        localStorage.removeItem("chatHistory");
+                    });
+                </script>
+            </form>
+        </div>
+    </div>
+
+    <div class="status-box-ls mt-3">
+            <div class="card-body">
+                <h6 class="card-title fw-bold mb-3 text-white">Gói đăng ký</h6>
+        <a asp-action="Index" asp-controller="Vip" class="btn w-100 fw-bold text-white  sidebar-item-ls">
+                    Chọn gói đăng ký
+                </a>
+            </div>
+    </div>

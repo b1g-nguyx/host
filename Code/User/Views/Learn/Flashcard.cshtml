@@ -1,0 +1,208 @@
+﻿@using ViewModel.FlashCard.User
+@model FlashCardDeatilViewModel
+@using Newtonsoft.Json
+
+@{
+    ViewData["Title"] = "Học qua Flashcard";
+    var flashCardsJson = JsonConvert.SerializeObject(Model.FlashCards);
+    var leftSide = Model.LeftSlide;
+}
+
+<style>
+    h2 {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .flashcard-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .flashcard {
+        width: 800px;
+        height: 350px;
+        perspective: 1000px;
+    }
+
+    .card-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        transition: transform 0.8s;
+        transform-style: preserve-3d;
+        cursor: pointer;
+    }
+
+    .card-front, .card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+    }
+
+    .card-front {
+        background-color: #198754;
+        color: white;
+    }
+
+    .card-back {
+        background-color: #ffffff;
+        color: #333;
+        transform: rotateY(180deg);
+        font-size: 18px;
+    }
+
+    .navigation {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+        .navigation button {
+            margin: 0 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #198754;
+            color: white;
+            cursor: pointer;
+        }
+
+            .navigation button:hover {
+                opacity: 0.8;
+            }
+</style>
+<!-- Modal hoàn thành -->
+<div class="modal fade" id="completionModal" tabindex="-1" aria-labelledby="completionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="completionModalLabel">Hoàn thành</h5>
+            </div>
+            <div class="modal-body text-dark">
+                Bạn đã hoàn thành tất cả flashcard!
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" onclick="location.reload()">Làm lại</button>
+                <button type="button" class="btn btn-secondary ps-3" onclick="submitComplete()" data-bs-dismiss="modal">Quay lại bài học</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5 text-center">
+    <button type="button" class="btn btn-outline-secondary mb-5 d-flex justify-content-end" onclick="goBack()">
+        ← Quay lại
+    </button>
+
+    <h2 id="title">Flashcards về chủ đề: @Model.Title</h2>
+
+    <div class="flashcard-container">
+        <div class="flashcard" onclick="flipCard(this)">
+            <div class="card-inner" id="card-inner">
+                <div class="card-front" id="card-front">Đang tải...</div>
+                <div class="card-back" id="card-back">Đang tải...</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button onclick="prevCard()">&larr; Trước</button>
+        <button onclick="nextCard()">Sau &rarr;</button>
+    </div>
+</div>
+
+<!-- Hidden for sidebar setup -->
+<input type="hidden" id="region" value="@leftSide.region" />
+<input type="hidden" id="sidebar" value="@leftSide.sidebar" />
+<input type="hidden" id="learn" value="nav-learn-tab" />
+<input type="hidden" id="historical" value="nav-historylocal-tab" />
+<input type="hidden" id="course" value="nav-course-tab" />
+
+@section Scripts {
+    <script>
+        function submitComplete() {
+          window.history.back();
+        }
+    </script>
+    <script>
+        const flashcardData = @Html.Raw(flashCardsJson);
+        let currentIndex = 0;
+           function renderFlashcard() {
+            const front = document.getElementById('card-front');
+            const back = document.getElementById('card-back');
+            const title = document.getElementById('title');
+            const cardInner = document.getElementById('card-inner');
+
+            if (flashcardData.length === 0) {
+                front.textContent = "Không có flashcard nào.";
+                back.textContent = "";
+                return;
+            }
+
+            const current = flashcardData[currentIndex];
+
+            front.textContent = current.FrontContent;
+            back.textContent = current.BackContent;
+
+            cardInner.style.transform = 'rotateY(0deg)';
+        }
+
+
+        function nextCard() {
+           if (flashcardData.length === 0) return;
+
+        if (currentIndex + 1 >= flashcardData.length) {
+            // Hiển thị modal hoàn thành
+            const completionModal = new bootstrap.Modal(document.getElementById('completionModal'));
+            completionModal.show();
+        } else {
+            currentIndex++;
+            renderFlashcard();
+        }
+        }
+
+        function prevCard() {
+            if (flashcardData.length === 0) return;
+            currentIndex = (currentIndex - 1 + flashcardData.length) % flashcardData.length;
+            renderFlashcard();
+        }
+
+        function flipCard(card) {
+            const inner = card.querySelector('.card-inner');
+            inner.style.transform = inner.style.transform === 'rotateY(180deg)' ? 'rotateY(0deg)' : 'rotateY(180deg)';
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+
+        window.onload = renderFlashcard;
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            let region = document.getElementById('region').value;
+            let sidebar = document.getElementById('sidebar').value;
+            let historical = document.getElementById('historical').value;
+            let learn = document.getElementById('learn').value;
+            let course = document.getElementById('course').value;
+
+            $('.sidebar-item-ls[name="' + sidebar + '"]').addClass('active-ls');
+            $('.nav-link[id="' + historical + '"]').attr('href', '/Region/' + region);
+            $('.nav-link[id="' + learn + '"]').attr('href', '/Learn/' + region);
+            $('.nav-link[id="' + course + '"]').attr('href', '/Course/' + region);
+        });
+    </script>
+}

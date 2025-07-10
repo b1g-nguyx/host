@@ -1,0 +1,114 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <link rel="icon" type="image/png" href="~/img/icon-logo-removebg-preview.png"/>
+    <title>Lịch sử cực dễ</title>
+    <script type="importmap"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/User.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/styles.css" asp-append-version="true" />
+   <style>
+        .icon {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+            display: inline-block;
+        }
+        .logo {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            display: inline-block;
+        }
+
+   </style>
+</head>
+<body>
+    <div class="layout-ls">
+        <!-- Left Sidebar -->
+        <!-- logo + menu đã có trước đó -->
+        <div class="sidebar-ls">
+            <a asp-action="Index" asp-controller="Home" class="text-decoration-none">
+                <div class="sidebar-logo-ls d-flex justify-content-center align-items-center">
+                        <img src="~/img/icon-logo-removebg-preview.png" alt="Map" class="logo" />
+                    <span class="text-uppercase">Lịch sử cực dễ</span>
+                </div>
+            </a>
+
+            <ul class="sidebar-menu-ls">
+                    <a asp-action="Index" asp-controller="Home" class="text-decoration-none d-flex align-items-center text-white">
+                <li class="sidebar-item-ls" name="home">
+                        <img src="~/img/icon-map-removebg-preview.png" alt="Map" class="icon" />
+                        <span class="text-uppercase ms-2">Bản đồ Việt Nam</span>
+                </li>
+                    </a>
+
+                    <a asp-action="AllCourse" asp-controller="Course" class="text-decoration-none d-flex align-items-center text-white">
+                <li class="sidebar-item-ls" name="learn">
+                        <img src="~/img/learning-removebg-preview.png" alt="Ranking" class="icon" />
+                        <span class="text-uppercase ms-2">Khóa học</span>
+                </li>
+                    </a>
+
+                    <a asp-action="Index" asp-controller="Video" class="text-decoration-none d-flex align-items-center text-white">
+                <li class="sidebar-item-ls" name="video">
+                        <img src="~/img/icon-video-removebg-preview.png" alt="Video" class="icon" />
+                        <span class="text-uppercase ms-2">VIDEO</span>
+                </li>
+                    </a>
+
+              @*       <a asp-action="Index" asp-controller="Home" class="text-decoration-none d-flex align-items-center text-white">
+                <li class="sidebar-item-ls" name="new">
+                        <img src="~/img/news-removebg-preview.png" alt="News" class="icon" />
+                        <span class="text-uppercase ms-2">Tin tức</span>
+                </li>
+                    </a> *@
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-ls" style="margin-left: 360px; margin-right:360px;">
+            <div class="map-container-ls">
+                @RenderBody()
+            </div>
+        </div>
+        </div>
+
+   
+                <div class="right-panel-ls">
+            @if (User.Identity!.IsAuthenticated)
+            {
+                @await Component.InvokeAsync("RightPanel")
+            }
+            else
+            {
+                    <div class="status-box-ls">
+                    <div class="auth-box-ls text-center">
+                        <p class="text-white">Tạo hồ sơ để lưu tiến trình của bạn!</p>
+                        <a asp-action="Register" asp-controller="Account" class="text-white btn btn-success w-100 mb-2">TẠO HỒ SƠ</a>
+                        <a asp-action="Login" asp-controller="Account" class="text-white btn btn-info w-100">ĐĂNG NHẬP</a>
+                        </div>
+                </div>
+            }
+            </div>
+      
+    @await Component.InvokeAsync("ChatBot")
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

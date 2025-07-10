@@ -1,0 +1,94 @@
+﻿@{
+    ViewData["Title"] = "Học qua Video hoạt hình";
+}
+
+@using ViewModel.Video.User
+
+@model VideoDetailViewModel
+@{
+    var leftSide = Model.LeftSlide;
+    var video = Model.Video;
+}
+<div class="container mt-5">
+    <button type="button" class="btn btn-outline-secondary mb-5" onclick="goBack()">
+        ← Quay lại
+    </button>
+    <h2 class="mb-4 text-center">Video học: @video.Title</h2>
+    @if (video != null)
+{
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="ratio ratio-16x9 rounded-top-4">
+                    <iframe src="@video.Url?autoplay=1"
+                            title="@video.Title"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            referrerpolicy="strict-origin-when-cross-origin"
+                            allowfullscreen>
+                    </iframe>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">@video.Title</h5>
+                    <p class="card-text">@video.Description</p>
+                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmModal">Hoàn thành</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal xác nhận -->
+    <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="confirmModalLabel">Xác nhận hoàn thành</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-dark">
+                    Bạn có chắc chắn muốn đánh dấu video này là đã hoàn thành không?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Huỷ</button>
+                    <button type="button" class="btn btn-secondary" onclick="submitComplete()">Xác nhận</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function submitComplete() {
+          window.history.back();
+        }
+    </script>
+}
+else
+{
+    <p class="text-center text-muted">Hiện chưa có video cho khu vực này.</p>
+}
+
+</div>
+
+<!-- Hidden for sidebar setup -->
+<input type="hidden" id="region" value="@leftSide.region" />
+<input type="hidden" id="sidebar" value="@leftSide.sidebar" />
+<input type="hidden" id="learn" value="nav-learn-tab" />
+<input type="hidden" id="historical" value="nav-historylocal-tab" />
+<input type="hidden" id="course" value="nav-course-tab" />
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            let region = document.getElementById('region').value;
+            let sidebar = document.getElementById('sidebar').value;
+            let historical = document.getElementById('historical').value;
+            let learn = document.getElementById('learn').value;
+            let course = document.getElementById('course').value;
+
+            $('.sidebar-item-ls[name="' + sidebar + '"]').addClass('active-ls');
+            $('.nav-link[id="' + historical + '"]').attr('href', '/Region/' + region);
+            $('.nav-link[id="' + learn + '"]').attr('href', '/Learn/' + region);
+            $('.nav-link[id="' + course + '"]').attr('href', '/Course/' + region);
+        });
+    </script>
+}

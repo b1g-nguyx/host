@@ -1,0 +1,209 @@
+﻿@{
+    ViewData["Title"] = "Thống kê người dùng";
+}
+<h2 class="my-4">📊 Thống kê hệ thống</h2>
+
+<!-- Bootstrap & Chart.js & jsPDF -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<div class="container">
+    <div class="row g-4">
+        <!-- Biểu đồ tài khoản mới -->
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Tài khoản tạo mới</h5>
+                    <canvas id="accountChart" height="100"></canvas>
+                    <div class="mt-3">
+                        <button class="btn btn-sm btn-primary" onclick="exportChartCSV('accountChart', 'TaiKhoanMoi.csv')">Xuất CSV</button>
+                        <button class="btn btn-sm btn-danger" onclick="exportChartPDF('accountChart', 'TaiKhoanMoi.pdf')">Xuất PDF</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Biểu đồ người dùng hoạt động -->
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Người dùng hoạt động</h5>
+                    <canvas id="activeUserChart" height="100"></canvas>
+                    <div class="mt-3">
+                        <button class="btn btn-sm btn-primary" onclick="exportChartCSV('activeUserChart', 'NguoiDungHoatDong.csv')">Xuất CSV</button>
+                        <button class="btn btn-sm btn-danger" onclick="exportChartPDF('activeUserChart', 'NguoiDungHoatDong.pdf')">Xuất PDF</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Biểu đồ giờ cao điểm -->
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Khung giờ hoạt động cao điểm</h5>
+                    <canvas id="peakHourChart" height="100"></canvas>
+                    <div class="mt-3">
+                        <button class="btn btn-sm btn-primary" onclick="exportChartCSV('peakHourChart', 'KhungGioCaoDiem.csv')">Xuất CSV</button>
+                        <button class="btn btn-sm btn-danger" onclick="exportChartPDF('peakHourChart', 'KhungGioCaoDiem.pdf')">Xuất PDF</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script fetch dữ liệu và vẽ biểu đồ -->
+<script>
+    // Tài khoản tạo mới
+    fetch('/api/analytics/account-created')
+        .then(res => res.json())
+        .then(data => {
+            const labels = data.map(d => d.date);
+            const counts = data.map(d => d.count);
+
+            new Chart(document.getElementById('accountChart'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Tài khoản tạo mới',
+                        data: counts,
+                        backgroundColor: 'rgba(54, 162, 235, 0.7)'
+                    }]
+                },
+                options: {
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Số lượng tài khoản tạo mỗi ngày (1 tháng qua)'
+                        }
+                    },
+                    responsive: true
+                }
+            });
+        });
+
+    // Người dùng hoạt động
+    fetch('/api/analytics/active-users')
+        .then(res => res.json())
+        .then(data => {
+            const labels = data.map(d => d.date);
+            const counts = data.map(d => d.activeUsers);
+
+            new Chart(document.getElementById('activeUserChart'), {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [{
+                        label: 'Người dùng hoạt động',
+                        data: counts,
+                        borderColor: 'rgba(255, 99, 132, 0.9)',
+                        fill: false,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Người dùng hoạt động mỗi ngày (1 tháng qua)'
+                        }
+                    },
+                    responsive: true
+                }
+            });
+        });
+
+    // Khung giờ cao điểm
+    fetch('/api/analytics/peak-hours')
+        .then(res => res.json())
+        .then(data => {
+            const labels = data.map(d => `${d.hour}:00`);
+            const counts = data.map(d => d.logins);
+
+            new Chart(document.getElementById('peakHourChart'), {
+                type: 'bar',
+                data: {
+                    labels,
+                    datasets: [{
+                        label: 'Lượt đăng nhập theo giờ',
+                        data: counts,
+                        backgroundColor: 'rgba(255, 159, 64, 0.7)'
+                    }]
+                },
+                options: {
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Khung giờ hoạt động cao điểm (30 ngày gần nhất)'
+                        }
+                    },
+                    responsive: true,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Giờ trong ngày'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Số lượt đăng nhập'
+                            },
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="/fonts/Roboto-Regular.js"></script> <!-- Font tiếng Việt -->
+<!-- Script export CSV và PDF -->
+<script>
+        const titleMap = {
+        "Tài khoản tạo mới": "New Account Creations",
+        "Người dùng hoạt động": "Active Users",
+        "Khung giờ hoạt động cao điểm": "Peak Active Hours"
+    };
+
+    // Xuất CSV
+    function exportChartCSV(chartId, fileName) {
+        const chart = Chart.getChart(chartId);
+        if (!chart) return;
+
+        let csv = 'Label,Value\n';
+        chart.data.labels.forEach((label, i) => {
+            const value = chart.data.datasets[0].data[i];
+            csv += `"${label}",${value}\n`;
+        });
+
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = fileName;
+        link.click();
+    }
+
+    // Xuất PDF
+        async function exportChartPDF(chartId, fileName) {
+        const chart = document.getElementById(chartId);
+        const canvas = chart;
+        const image = canvas.toDataURL('image/png', 1.0);
+
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF();
+
+        const rawTitle = chart.previousElementSibling?.innerText?.trim() || 'Chart';
+        const englishTitle = titleMap[rawTitle] || 'Chart';
+
+        pdf.setFontSize(14);
+        pdf.text(englishTitle, 10, 10);
+        pdf.addImage(image, 'PNG', 10, 20, 180, 100);
+        pdf.save(fileName);
+    }
+
+</script>

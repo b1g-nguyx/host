@@ -1,0 +1,153 @@
+﻿@using ViewModel.Learn.User  
+@model LearnDetailViewModel
+@{  
+    Layout = "_Layout";  
+}  
+@* <link rel="stylesheet" href="~/css/learn.css"> *@  
+<style>  
+    .layout-ls {  
+        display: flex;  
+        height: 100vh;  
+        color: white;  
+        font-family: sans-serif;  
+    }  
+
+    /* Sidebar trái */  
+    .sidebar-ls {  
+        z-index: 9999;  
+        width: 240px;  
+        border-right: 1px solid #1e293b;  
+        padding: 20px 10px;  
+    }  
+
+    /* Nội dung chính */  
+    .main-ls {  
+        flex: 1;  
+        padding: 20px;  
+    }  
+
+    .title-ls {  
+        font-size: 20px;  
+        margin-bottom: 20px;  
+    }  
+
+    .map-img-ls {  
+        max-width: 100%;  
+        height: auto;  
+    }  
+
+    /* Panel phải */  
+    .right-ls {  
+        width: 280px;  
+        border-left: 1px solid #1e293b;  
+        padding: 20px;  
+    }  
+
+    .panel-ls {  
+        border-radius: 12px;  
+        padding: 15px;  
+    } 
+  
+    .card {
+        border-radius: var(--radius);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    
+    .card-img-top {
+        border-top-left-radius: var(--radius);
+        border-top-right-radius: var(--radius);
+        height: 200px;
+        object-fit: cover;
+    }
+
+        
+    .card-img-top {
+        transition: filter 0.3s ease;
+    }
+
+        .card-img-top:hover {
+            filter: brightness(90%);
+        }
+  
+</style>
+@{
+    var leftSide = Model.LeftSlide;
+    var lessons = Model.Learn.Lesson;
+    var LearningMethods = Model.LearnMethod;
+}
+
+<div style="width: 100%; height: 100vh; margin: 0; padding: 0;">
+    <button type="button" class="btn btn-outline-secondary mb-5 d-flex justify-content-end" onclick="goBack()">
+        ← Quay lại
+    </button>
+    <section class="categories py-5">
+        <div class="container">
+            <h2 class="text-center mb-4">Nội dung bài học</h2>
+            <hr />
+          
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card shadow-sm lesson-card hover-shadow transition rounded-4">
+                        <img src="/img/@lessons.Thumbnail" class="card-img-top rounded-top" alt="Thumbnail" style="max-height: 300px; object-fit: cover;" />
+                        <div class="card-body">
+                            <h4 class="card-title">@lessons.Title</h4>
+                            <p class="card-subtitle text-muted mb-2">
+                                @lessons.Authors - @lessons.Source
+                            </p>
+                            <p class="card-text">@Html.Raw(lessons.Content)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="categories p-3" style="padding: 0; margin: 0;">
+        <section class="categories py-5">
+            <div class="container">
+                <h2 class="text-center mb-4">Phương Pháp Học</h2>
+                <div class="row g-4">
+                    @foreach(var learningMethod in LearningMethods)
+                    {
+                        <div class="col-md-4">
+                            <a asp-controller="Learn" asp-action="@learningMethod.MethodName" asp-route-Id="@learningMethod.Id" asp-route-lessonId="@lessons.Id" class="text-decoration-none">
+                                <div class="card h-100">
+                                    <img src="@learningMethod.ImageBase64" class="card-img-top" alt="Mathematics">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@learningMethod.MethodName</h5>
+                                        <p class="card-text">@learningMethod.Description</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </section>
+    </section>
+</div>
+
+<input type="hidden" id="region" value="@leftSide.region" />
+<input type="hidden" id="sidebar" value="@leftSide.sidebar" />
+<input type="hidden" id="learn" value="nav-learn-tab" />
+<input type="hidden" id="historical" value="nav-historylocal-tab" />
+<input type="hidden" id="course" value="nav-course-tab" />
+@section Scripts {
+    <script>
+         function goBack() {
+            window.history.back();
+        }
+        $(document).ready(function () {
+            let region = document.getElementById('region').value;
+            let sidebar = document.getElementById('sidebar').value;
+            let historical = document.getElementById('historical').value;
+            let learn = document.getElementById('learn').value;
+            let course = document.getElementById('course').value;
+
+          $('.sidebar-item-ls[name="'+sidebar+'"]').addClass('active-ls');
+          $('.nav-link[id="'+historical+'"]').attr('href', '/Region/'+region);
+          $('.nav-link[id="'+learn+'"]').attr('href', '/Learn/'+region);
+          $('.nav-link[id="'+course+'"]').attr('href', '/Course/'+region);
+         });
+    </script>
+} 

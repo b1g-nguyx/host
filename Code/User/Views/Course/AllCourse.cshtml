@@ -1,0 +1,135 @@
+﻿@using ViewModel.Course.User
+@model CourseHomeViewModel
+@{
+    Layout = "_Layout";
+}
+<style>
+    .text-truncate {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .layout-ls {
+        display: flex;
+        height: 100vh;
+        color: white;
+        font-family: sans-serif;
+    }
+
+    /* Sidebar trái */
+    .sidebar-ls {
+        z-index: 9999;
+        width: 240px;
+        border-right: 1px solid #1e293b;
+        padding: 20px 10px;
+    }
+
+    /* Nội dung chính */
+    .main-ls {
+        flex: 1;
+        padding: 20px;
+    }
+
+    .title-ls {
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+
+    .map-img-ls {
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* Panel phải */
+    .right-ls {
+        width: 280px;
+        border-left: 1px solid #1e293b;
+        padding: 20px;
+    }
+
+    .panel-ls {
+        border-radius: 12px;
+        padding: 15px;
+    }
+
+    .card {
+        border-radius: var(--radius);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: transform 0.2s;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+    .card-img-top {
+        border-top-left-radius: var(--radius);
+        border-top-right-radius: var(--radius);
+        height: 200px;
+        object-fit: cover;
+    }
+
+</style>
+@{
+    var leftSide = Model.leftSlide;
+}
+<div style="width: 100%; height: 100vh; margin: 0; padding: 0;">
+    <div class="col-12">
+        <button type="button" class="btn btn-outline-secondary mb-5 d-none justify-content-end" onclick="goBack()">
+            ← Quay lại
+        </button>
+    </div>
+    <section class="categories p-3 mb-5" style="padding: 0; margin: 0;">
+        <section class="categories py-5">
+            <div class="container">
+                <h2 class="text-center mb-4">Các khóa học</h2>
+                <div class="row g-4">
+                    @foreach (var course in Model.courses)
+                    {
+                        <div class="col-md-4">
+                            <a asp-controller="Course" asp-action="Detail" asp-route-id="@course.Id" asp-route-region="@leftSide.region" class="text-decoration-none">
+                                <div class="card h-100">
+
+                                    <img src="~/img/@(course.ImageBase64 != null ? course.ImageBase64 : "flashcard.png")" class="card-img-top" alt="@course.CourseName">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@course.CourseName</h5>
+                                        <p class="card-text text-truncate" style="max-width: 200px;">
+                                            @(string.IsNullOrEmpty(course.Description) ? " " : course.Description)
+                                        </p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </section>
+    </section>
+</div>
+
+
+<input type="hidden" id="region" value="@leftSide.region" />
+<input type="hidden" id="sidebar" value="@leftSide.sidebar" />
+<input type="hidden" id="navbar" value="@leftSide.navbar" />
+<input type="hidden" id="learn" value="nav-learn-tab" />
+<input type="hidden" id="historical" value="nav-historylocal-tab" />
+<input type="hidden" id="course" value="nav-course-tab" />
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            let region = document.getElementById('region').value;
+            let sidebar = document.getElementById('sidebar').value;
+            let navbar = document.getElementById('navbar').value;
+            let historical = document.getElementById('historical').value;
+            let learn = document.getElementById('learn').value;
+            let course = document.getElementById('course').value;
+
+          $('.sidebar-item-ls[name="'+sidebar+'"]').addClass('active-ls');
+          $('.nav-link[id="'+navbar+'"]').addClass('active');
+          $('.nav-link[id="'+historical+'"]').attr('href', '/Region/'+region);
+          $('.nav-link[id="'+learn+'"]').attr('href', '/Learn/'+region);
+          $('.nav-link[id="'+course+'"]').attr('href', '/Course/'+region);
+         });
+    </script>
+}

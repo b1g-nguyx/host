@@ -1,0 +1,48 @@
+﻿@{
+    ViewData["Title"] = "Super Duolingo";
+}
+<style>
+    .box {
+        border: 3px solid #cccccc;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        margin-top: 10px;
+    }
+    .bg-dark{
+        background-color: #1e293b !important;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+</style>
+<div class="container py-5 text-white">
+    <h2 class="text-white fw-bold"> Chọn gói đăng ký</h2>
+    <!-- Banner -->
+    <div class="card text-center text-white mb-4 border-0 mt-3" style="background: linear-gradient(135deg, #3a1c71, #d76d77, #ffaf7b); border-radius: 16px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+        <div class="card-body">
+            <h5 class="card-title">
+                &nbsp;Bắt đầu 2 tuần dùng thử miễn phí để tận hưởng các quyền lợi độc quyền của <strong>Super</strong>
+            </h5>
+            <a asp-action="Detail" asp-controller="Vip" class="btn btn-light mt-3 fw-bold px-4">BẮT ĐẦU 14 NGÀY DÙNG THỬ MIỄN PHÍ</a>
+        </div>
+    </div>
+
+    <!-- Tính năng -->
+    <div class=" bg-dark rounded-4 p-4">
+        <h4 class="mb-4 text-white">Super có những tính năng nào</h4>
+        <div class="list-group list-group-flush">
+            <div class="list-group-item bg-dark text-white border-0 d-flex align-items-center box">
+                <i class="bi bi-person-check-fill me-3 text-info fs-4"></i> Cá nhân hóa quá trình học tập
+            </div>
+            <div class="list-group-item bg-dark text-white border-0 d-flex align-items-center box">
+                <i class="bi bi-person-check-fill me-3 text-info fs-4"></i>Free AI hỗ trợ
+            </div>
+            <div class="list-group-item bg-dark text-white border-0 d-flex align-items-center box">
+                <i class="bi bi-person-check-fill me-3 text-info fs-4"></i>Nhắc nhở học tập hàng ngày
+            </div>
+
+            <div class="list-group-item bg-dark text-white border-0 d-flex align-items-center box">
+                <i class="bi bi-people-fill me-3 text-primary fs-4"></i>
+                Góp phần hỗ trợ chúng tôi hoàn thành sứ mệnh đem giáo dục miễn phí tới cho hàng triệu người
+            </div>
+        </div>
+    </div>
+</div>

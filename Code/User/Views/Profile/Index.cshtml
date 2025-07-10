@@ -1,0 +1,240 @@
+﻿@using ViewModel.Auth.User
+@model ProfileViewModel
+@{
+    ViewData["Title"] = "Trang cá nhân";
+}
+<style>
+    .custom-alert {
+        position: relative;
+        padding: 14px 48px 14px 16px;
+        margin-bottom: 1rem;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: 500;
+        border: 1px solid transparent;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        transition: 0.3s ease-in-out;
+    }
+
+    .custom-alert-success {
+        background-color: #d1f7d6;
+        border-color: #a3e5b4;
+        color: #1f5131;
+    }
+
+    .custom-alert-danger {
+        background-color: #fde2e1;
+        border-color: #f5b5b5;
+        color: #842029;
+    }
+
+    .custom-alert-info {
+        background-color: #e2eafc;
+        border-color: #b6ccfe;
+        color: #084298;
+    }
+
+    .custom-alert .close-btn {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-weight: bold;
+        color: #333;
+        border: none;
+        background: transparent;
+        font-size: 22px;
+        line-height: 1;
+        cursor: pointer;
+        padding: 0;
+        opacity: 0.7;
+    }
+
+        .custom-alert .close-btn:hover {
+            opacity: 1;
+            color: red;
+        }
+
+</style>
+<div style="width: 100%; height: 100vh; margin: 0; padding: 0;">
+    <div class="container py-5 text-white" style="max-width: 600px;">
+        <h2 class="mb-4">Xin chào, @Model.FullName!</h2>
+
+        <div id="messageBox" class="mb-3"></div>
+
+        <form id="profileForm">
+            <input type="hidden" id="UserId" value="@Model.UserId" />
+            <input type="hidden" id="UserName" value="@Model.UserName" />
+
+            <div class="mb-3">
+                <label class="form-label">Tên</label>
+                <input type="text" class="form-control" id="FullName" value="@Model.FullName" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="text" id="Email" class="form-control" value="@Model.Email" readonly />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Trường học</label>
+                <input type="text" class="form-control" id="SchoolName" value="@Model.SchoolName" />
+            </div>
+
+            <button type="submit" class="btn btn-outline-success w-100 mb-3" id="saveBtn">Lưu thay đổi</button>
+
+            <button type="button" class="btn btn-outline-secondary w-100" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+                Đổi mật khẩu
+            </button>
+        </form>
+
+        <hr class="text-white my-4" />
+        <h4 class="mb-3">📊 Biểu đồ thời gian học (7 ngày gần nhất)</h4>
+
+        <div class="bg-dark p-3 rounded">
+            <canvas id="studyChart" style="max-width: 100%; height: 400px;"></canvas>
+        </div>
+    </div>
+
+</div>
+
+<!-- Modal Đổi mật khẩu -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content text-white" style="background : #1e293b">
+            <div class="modal-header">
+                <h5 class="modal-title" id="changePasswordModalLabel">Đổi mật khẩu</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="CurrentPasswordModal" class="form-label">Mật khẩu hiện tại</label>
+                    <input type="password" class="form-control" id="CurrentPasswordModal" />
+                </div>
+                <div class="mb-3">
+                    <label for="NewPasswordModal" class="form-label">Mật khẩu mới</label>
+                    <input type="password" class="form-control" id="NewPasswordModal" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnChangePassword" class="btn btn-primary">Lưu mật khẩu</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+   
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        const userId = '@Model.UserId';
+
+               function showCustomAlert(message, type = "success") {
+            const typeClass = {
+                success: "custom-alert-success",
+                danger: "custom-alert-danger",
+                info: "custom-alert-info"
+            }[type] || "custom-alert-info";
+
+            const alertHtml = `
+                <div class="custom-alert ${typeClass}">
+                    ${message}
+                    <button class="close-btn" onclick="this.parentElement.remove()">×</button>
+                </div>
+            `;
+
+            $('#messageBox').html(alertHtml);
+        }
+
+
+        function loadChart() {
+            $.get(`/api/Profile/Chart/${userId}`, function (data) {
+                const labels = data.map(x => x.date);
+                const values = data.map(x => x.totalMinutes);
+
+                const ctx = document.getElementById('studyChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Thời gian học (phút)',
+                            data: values,
+                            backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: { beginAtZero: true, title: { display: true, text: 'Phút' } },
+                            x: { title: { display: true, text: 'Ngày' } }
+                        }
+                    }
+                });
+            });
+        }
+
+        $('#profileForm').on('submit', function (e) {
+            e.preventDefault();
+
+            const formData = {
+                UserId: $('#UserId').val(),
+                Email: $('#Email').val(),
+                FullName: $('#FullName').val(),
+                UserName: $('#UserName').val(),
+                SchoolName: $('#SchoolName').val()
+            };
+
+            $.ajax({
+                url: '/api/Profile/Update',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                success: function (res) {
+                    showCustomAlert(res.message, "success");
+                },
+                error: function () {
+                    showCustomAlert("❌ Cập nhật thất bại", "danger");
+                }
+            });
+        });
+
+        $('#btnChangePassword').on('click', function () {
+            const currentPassword = $('#CurrentPasswordModal').val();
+            const newPassword = $('#NewPasswordModal').val();
+
+            $.ajax({
+                url: '/api/Profile/ChangePassword',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    userId: userId,
+                    currentPassword: currentPassword,
+                    newPassword: newPassword
+                }),
+                success: function () {
+                    showCustomAlert("✅ Đổi mật khẩu thành công!", "success");
+                    $('#changePasswordModal').modal('hide');
+                    $('#CurrentPasswordModal').val('');
+                    $('#NewPasswordModal').val('');
+                },
+                error: function (xhr) {
+                    const msg = xhr.responseText || "Đổi mật khẩu thất bại";
+                    showCustomAlert("❌ " + msg, "danger");
+                }
+            });
+        });
+
+        $(function () {
+            loadChart();
+        });
+
+    </script>
+}
+
+

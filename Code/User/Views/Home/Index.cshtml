@@ -1,0 +1,13 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@await Html.PartialAsync("_map")
+
+@section Scripts {
+    <script>
+  $(document).ready(function () {
+    $('.sidebar-item-ls[name="home"]').addClass('active-ls');
+   });
+    </script>
+}

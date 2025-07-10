@@ -1,0 +1,98 @@
+﻿@using ViewModel.Region.User  
+@model RegionHomeViewModel  
+@{  
+    Layout = "_Layout";  
+}  
+@* <link rel="stylesheet" href="~/css/learn.css"> *@  
+<style>  
+    .layout-ls {  
+        display: flex;  
+        height: 100vh;  
+        color: white;  
+        font-family: sans-serif;  
+    }  
+
+    /* Sidebar trái */  
+    .sidebar-ls {  
+        z-index: 9999;  
+        width: 240px;  
+        border-right: 1px solid #1e293b;  
+        padding: 20px 10px;  
+    }  
+
+    /* Nội dung chính */  
+    .main-ls {  
+        flex: 1;  
+        padding: 20px;  
+    }  
+
+    .title-ls {  
+        font-size: 20px;  
+        margin-bottom: 20px;  
+    }  
+
+    .map-img-ls {  
+        max-width: 100%;  
+        height: auto;  
+    }  
+
+    /* Panel phải */  
+    .right-ls {  
+        width: 280px;  
+        border-left: 1px solid #1e293b;  
+        padding: 20px;  
+    }  
+
+    .panel-ls {  
+        border-radius: 12px;  
+        padding: 15px;  
+    }  
+</style>  
+ 
+<div style="width: 100%; height: 100vh; margin: 0; padding: 0;">
+ 
+    <section class="categories p-3" style="padding: 0; margin: 0;">
+        @if(Model.regions.HistoricalSite!.LinkImage360 == null)
+        {
+           
+        }
+        else
+        {
+            <iframe src="@Model.regions.HistoricalSite!.LinkImage360"
+                    style="width: 100%; height: 100vh; border: none;"
+                    allowfullscreen>
+            </iframe>
+        }
+    </section>
+</div>
+@{
+    var leftSide = Model.leftSlide;
+}
+
+<input type="hidden" id="region" value="@leftSide.region" />
+<input type="hidden" id="sidebar" value="@leftSide.sidebar" />
+<input type="hidden" id="navbar" value="@leftSide.navbar" />
+<input type="hidden" id="learn" value="nav-learn-tab" />
+<input type="hidden" id="historical" value="nav-historylocal-tab" />
+<input type="hidden" id="course" value="nav-course-tab" />
+@section Scripts {
+    <script>
+          function goBack() {
+            window.history.back();
+        }
+        $(document).ready(function () {
+            let region = document.getElementById('region').value;
+            let sidebar = document.getElementById('sidebar').value;
+            let navbar = document.getElementById('navbar').value;
+            let historical = document.getElementById('historical').value;
+            let learn = document.getElementById('learn').value;
+            let course = document.getElementById('course').value;
+
+          $('.sidebar-item-ls[name="'+sidebar+'"]').addClass('active-ls');
+          $('.nav-link[id="'+navbar+'"]').addClass('active');
+          $('.nav-link[id="'+historical+'"]').attr('href', '/Region/'+region);
+          $('.nav-link[id="'+learn+'"]').attr('href', '/Learn/'+region);
+          $('.nav-link[id="'+course+'"]').attr('href', '/Course/'+region);
+         });
+    </script>
+}

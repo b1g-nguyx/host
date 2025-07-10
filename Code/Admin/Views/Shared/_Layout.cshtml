@@ -1,0 +1,88 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Admin</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Admin.styles.css" asp-append-version="true" />
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100vh;
+            background-color: #343a40;
+            padding-top: 60px; /* để chừa chỗ cho header */
+            color: white;
+        }
+
+            .sidebar a {
+                color: white;
+                display: block;
+                padding: 12px 20px;
+                text-decoration: none;
+            }
+
+                .sidebar a:hover {
+                    background-color: #495057;
+                }
+
+        .main-content {
+            margin-left: 250px; /* bằng chiều rộng sidebar */
+            padding: 20px;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 250px; /* đẩy qua phải bằng chiều rộng sidebar */
+            right: 0;
+            z-index: 1000;
+            background-color: #fff;
+        }
+
+        footer {
+            margin-left: 250px;
+        }
+
+        body {
+            padding-top: 60px; /* chiều cao header */
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar cố định -->
+    <aside class="sidebar">
+        <a asp-controller="Home" asp-action="Index">Thống Kê</a>
+        <a asp-controller="Users" asp-action="Index">Tài khoản người dùng</a>
+        <a asp-controller="Courses" asp-action="Index">Khóa học</a>
+        <a asp-controller="Reports" asp-action="Index">Bài học</a>
+    </aside>
+
+    <!-- Header cố định -->
+    <header>
+        <nav class="navbar navbar-expand navbar-light border-bottom box-shadow px-3">
+            <a class="navbar-brand" asp-controller="Home" asp-action="Index">Admin Panel</a>
+        </nav>
+    </header>
+
+    <!-- Nội dung chính -->
+    <main class="main-content">
+        @RenderBody()
+    </main>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

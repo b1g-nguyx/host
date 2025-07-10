@@ -1,0 +1,217 @@
+﻿/* Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+
+a.navbar-brand {
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
+}
+
+a {
+  color: #0077cc;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+.border-top {
+  border-top: 1px solid #e5e5e5;
+}
+.border-bottom {
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.box-shadow {
+  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+button.accept-policy {
+  font-size: 1rem;
+  line-height: inherit;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  white-space: nowrap;
+  line-height: 60px;
+}
+.layout-ls {
+    display: flex;
+    height: 100vh;
+    color: white;
+    font-family: sans-serif;
+}
+
+/* Sidebar trái */
+.sidebar-ls {
+    width: 240px;
+    border-right: 1px solid #1e293b;
+    padding: 20px 10px;
+}
+
+/* Nội dung chính */
+.main-ls {
+    flex: 1;
+    padding: 20px;
+    margin-top: 50px;
+}
+
+.title-ls {
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.map-container-ls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.map-img-ls {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Panel phải */
+.right-ls {
+    width: 360px;
+    border-left: 2px solid #1e293b;
+    padding: 20px;
+    position: fixed;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 1000;
+}
+
+.sidebar-ls {
+    width: 360px;
+    border-right: 2px solid #1e293b;
+    padding: 20px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 1000;
+}
+
+.panel-ls {
+    border-radius: 12px;
+    padding: 15px;
+}
+
+.sidebar-logo-ls {
+    font-size: 24px;
+    font-weight: bold;
+    color: #22c55e;
+    padding: 10px 15px;
+}
+
+.sidebar-menu-ls {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+.sidebar-item-ls {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+    .sidebar-item-ls:hover,
+    .sidebar-item-ls.active-ls {
+        background-color: #1e293b;
+        border: 1px solid #334155;
+    }
+
+    .sidebar-item-ls img {
+        width: 24px;
+        height: 24px;
+        margin-right: 12px;
+    }
+
+    .sidebar-item-ls span {
+        font-size: 14px;
+        font-weight: bold;
+        letter-spacing: 0.5px;
+    }
+
+.right-panel-ls {
+    width: 360px;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    padding: 20px;
+    overflow-y: auto;
+    border-left: 2px solid #1e293b;
+    z-index: 999;
+}
+
+.status-box-ls {
+    background: #1e293b;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.locked-card-ls {
+    background: #334155;
+    padding: 12px;
+    border-radius: 10px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.icon-sm-ls {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+.task-item-ls {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    gap: 10px;
+}
+
+.task-content-ls {
+    flex: 1;
+}
+
+    .task-content-ls span {
+        font-size: 14px;
+        font-weight: 500;
+        color: white;
+        display: block;
+        margin-bottom: 4px;
+    }
+
+.progress {
+    height: 8px;
+    background-color: #334155;
+    border-radius: 4px;
+}
+
+.progress-bar {
+    height: 100%;
+    border-radius: 4px;
+}

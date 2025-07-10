@@ -1,0 +1,108 @@
+﻿@{
+    ViewData["Title"] = "Học qua Video hoạt hình";
+}
+
+@using ViewModel.Video.User
+@model VideoDetailAllViewModel
+
+@{
+    var leftSide = Model.LeftSlide;
+    var videos = Model.Video;
+    var video = Model.MainVideo;
+}
+<style>
+    .related-video-item {
+        background-color: #fdfdfd;
+        border: 1px solid #eee;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .related-video-item:hover {
+            background-color: #f0f8ff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+        }
+
+    .related-thumbnail {
+        transition: transform 0.3s ease;
+    }
+
+    .related-video-item:hover .related-thumbnail {
+        transform: scale(1.05);
+    }
+</style>
+
+<div class="container py-0">
+    <!-- Nút quay lại -->
+    <button type="button" class="btn btn-outline-secondary mb-5 d-flex justify-content-end" onclick="goBack()">
+        ← Quay lại
+    </button>
+
+    <!-- Video chính -->
+    <div class="card shadow-sm border-0 rounded-4 mb-4">
+        <div class="ratio ratio-16x9 rounded-top">
+            <iframe src="@video.Url?autoplay=1"
+                    title="@video.Title"
+                    frameborder="0"
+                    allow="autoplay; encrypted-media"
+                    allowfullscreen
+                    class="w-100 rounded-top">
+            </iframe>
+        </div>
+        <div class="card-body">
+            <h4 class="fw-bold">@video.Title</h4>
+            <p class="text-muted">@video.Description</p>
+        </div>
+    </div>
+
+    <!-- Danh sách video liên quan (xếp dọc) -->
+    <div class="bg-light p-4 rounded-4 shadow-sm mb-5">
+        <h5 class="fw-semibold mb-4 text-dark">
+            <i class="bi bi-play-circle"></i> Video liên quan
+        </h5>
+
+        @foreach (var v in videos)
+        {
+            <a asp-action="Detail" asp-route-id="@v.Id"
+               class="related-video-item d-flex mb-3 p-2 rounded-3 text-decoration-none text-dark align-items-start">
+                <img src="@v.Thumbnail"
+                     class="related-thumbnail rounded me-3"
+                     style="width: 120px; height: 70px; object-fit: cover;"
+                     alt="@v.Title" />
+                <div>
+                    <div class="fw-semibold text-truncate" style="max-width: 250px;">@v.Title</div>
+                </div>
+            </a>
+        }
+
+    </div>
+</div>
+
+
+<!-- Hidden inputs for sidebar logic -->
+<input type="hidden" id="region" value="@leftSide.region" />
+<input type="hidden" id="sidebar" value="@leftSide.sidebar" />
+<input type="hidden" id="learn" value="nav-learn-tab" />
+<input type="hidden" id="historical" value="nav-historylocal-tab" />
+<input type="hidden" id="course" value="nav-course-tab" />
+
+@section Scripts {
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+
+        $(document).ready(function () {
+            let region = $('#region').val();
+            let sidebar = $('#sidebar').val();
+            let historical = $('#historical').val();
+            let learn = $('#learn').val();
+            let course = $('#course').val();
+
+            $('.sidebar-item-ls[name="' + sidebar + '"]').addClass('active-ls');
+            $('#' + historical).attr('href', '/Region/' + region);
+            $('#' + learn).attr('href', '/Learn/' + region);
+            $('#' + course).attr('href', '/Course/' + region);
+        });
+    </script>
+}

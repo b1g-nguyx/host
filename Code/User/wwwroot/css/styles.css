@@ -1,0 +1,121 @@
+﻿* {
+    font-family: 'Roboto Mono', monospace;
+    padding: 0;
+    margin: 0;
+    border: none;
+}
+body {
+    background: #131f24;
+}
+/*body, html {
+    margin: 0;
+    height: 100%;
+}
+*/
+
+/* Dùng Flexbox để canh giữa */
+.d-flex-ls {
+    display: flex;
+}
+
+.justify-content-center-ls {
+    justify-content: center;
+}
+
+.align-items-center-ls {
+    align-items: center;
+}
+
+.w-100-ls {
+    width: 100%;
+}
+
+.h-100-ls {
+    height: 100%;
+}
+
+.vh-100-ls {
+    height: 100vh;
+}
+
+/* Container login */
+.login-container-ls {
+    padding: 30px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+/* Form controls */
+.form-control-ls {
+    width: 100%;
+    padding: 10px;
+    background-color: #334155;
+    border: 1px solid #475569;
+    border-radius: 5px;
+    color: white;
+}
+
+    .form-control-ls::placeholder {
+        color: #94a3b8;
+    }
+
+.btn-ls {
+    background-color: #49c0f8;
+    border: none;
+    padding: 10px;
+    border-radius: 10px;
+    color: black;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+    .btn-ls:hover {
+        background-color: #38bdf8;
+    }
+
+.btn-outline-facebook-ls {
+    padding: 10px;
+    border-radius: 10px;
+    color: black;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: transparent;
+    border: 2px solid #3b5998;
+    color: #3b5998;
+}
+    .btn-outline-facebook-ls:hover {
+        background-color: #3b5998;
+        color: #ffffff;
+    }
+    .btn-outline-google-ls {
+        padding: 10px;
+        border-radius: 10px;
+        color: black;
+        font-weight: bold;
+        cursor: pointer;
+        
+        background-color: transparent;
+        border: 2px solid #ea4335;
+        color: #ea4335;
+    }
+    .btn-outline-google-ls:hover {
+        background-color: #ea4335;
+        color: #ffffff;
+    }
+.text-center-ls {
+    text-align: center;
+}
+
+.mt-3-ls {
+    margin-top: 1rem;
+}
+
+.me-2-ls {
+    margin-right: 0.5rem;
+}
+
+.text-danger-ls {
+    color: #f87171;
+}

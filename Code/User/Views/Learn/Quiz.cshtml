@@ -1,0 +1,149 @@
+﻿@using ViewModel.Quitz.User  
+@model QuitzViewModel  
+@{  
+    ViewData["Title"] = "Quiz trắc nghiệm";   
+    var leftSide = Model.LeftSlideViewModel;  
+    var questions = Model.Question;  
+}  
+<div class="container mt-5">  
+    <button type="button" class="btn btn-outline-secondary mb-5" onclick="goBack()">  
+        ← Quay lại  
+    </button>  
+    <h2 class="mb-4 text-center"></h2>  
+    <h2 class="mb-4 text-center">Quiz lịch sử: @Model.Title</h2>  
+    <div class="row justify-content-center">  
+        <div class="col-md-8">  
+            <div class="card shadow-lg border-0 rounded-4 p-4">
+                <form id="quizForm">
+                    <input type="hidden" name="lessonId" value="@Model.LessonId" />
+                    @for (int i = 0; i < questions!.Count; i++)
+                    {
+                        var q = questions[i];
+                        <div class="mb-4 question-block" data-index="@i">
+                            <!-- Bọc phần tiêu đề trong label để highlight nếu lỗi -->
+                            <label class="question-title fw-bold d-block">
+                                @(i + 1). @q.QuestionContent
+                            </label>
+
+                            @foreach (var a in q.Answers)
+                            {
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio"
+                                           name="UserAnswers[@i].AnswerId"
+                                           value="@a.AnswerId" />
+                                    <input type="hidden" name="UserAnswers[@i].QuestionId" value="@q.QuestionId" />
+                                    <label class="form-check-label">@a.Content</label>
+                                </div>
+                            }
+
+                            <!-- Dòng lỗi -->
+                            <div class="text-danger validation-message mt-1" style="display:none;"></div>
+                        </div>
+                    }
+
+                    <button type="button" class="btn btn-success" onclick="submitQuiz()">Nộp bài</button>
+                </form>
+
+                <div id="result" class="mt-4 alert alert-info d-none"></div>
+            </div>  
+        </div>  
+    </div>  
+</div>
+<!-- Modal -->
+<div class="modal fade" id="quizResultModal" tabindex="-1" aria-labelledby="quizResultModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="quizResultModalLabel">Kết quả bài làm</h5>
+            </div>
+            <div class="modal-body text-dark" id="quizResultBody">
+                <!-- Kết quả sẽ hiển thị ở đây -->
+            </div>
+            <div class="modal-footer">
+                <!-- Làm lại: reload trang -->
+                <button type="button" class="btn btn-outline-secondary" onclick="location.reload()">Làm lại</button>
+                <button type="button" class="btn btn-secondary ps-3" onclick="submitComplete()" data-bs-dismiss="modal">Quay lại bài học</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Hidden for sidebar setup -->  
+<input type="hidden" id="region" value="@leftSide.region" />  
+<input type="hidden" id="sidebar" value="@leftSide.sidebar" />  
+<input type="hidden" id="learn" value="nav-learn-tab" />  
+<input type="hidden" id="historical" value="nav-historylocal-tab" />  
+<input type="hidden" id="course" value="nav-course-tab" />  
+
+@section Scripts {
+    <script>
+        function submitComplete() {
+          window.history.back();
+        }
+    </script>
+    <script>
+        function submitQuiz() {
+            var totalQuestions = @Model.Question.Count;
+            var isValid = true;
+
+            // Reset lỗi cũ
+            $(".validation-message").hide().text("");
+            $(".question-title").removeClass("text-danger");
+
+            for (var i = 0; i < totalQuestions; i++) {
+                var selected = $("input[name='UserAnswers[" + i + "].AnswerId']:checked").val();
+                if (!selected) {
+                    isValid = false;
+
+                    // Thêm class màu đỏ cho tiêu đề
+                    $(".question-block[data-index='" + i + "'] .question-title")
+                        .addClass("text-danger");
+
+                    // Hiển thị lỗi bên dưới
+                    $(".question-block[data-index='" + i + "'] .validation-message")
+                        .text("Bạn phải chọn đáp án cho câu hỏi này.")
+                        .show();
+                }
+            }
+
+            if (!isValid) {
+                // Nếu có lỗi thì không gửi form
+                return;
+            }
+
+            // Gửi AJAX khi hợp lệ
+            var formData = $("#quizForm").serialize();
+
+            $.ajax({
+                url: '/Learn/QuitzCheck',
+                method: 'POST',
+                data: formData,
+                success: function (data) {
+                    $("#quizResultBody").html(data);
+                    var resultModal = new bootstrap.Modal(document.getElementById('quizResultModal'));
+                    resultModal.show();
+                },
+                error: function () {
+                    $("#quizResultBody").html("Có lỗi xảy ra khi gửi bài.");
+                    var resultModal = new bootstrap.Modal(document.getElementById('quizResultModal'));
+                    resultModal.show();
+                }
+            });
+        }
+    </script>
+    <script>  
+        $(document).ready(function () {  
+            let region = document.getElementById('region').value;  
+            let sidebar = document.getElementById('sidebar').value;  
+            let historical = document.getElementById('historical').value;  
+            let learn = document.getElementById('learn').value;  
+            let course = document.getElementById('course').value;  
+
+            $('.sidebar-item-ls[name="' + sidebar + '"]').addClass('active-ls');  
+            $('.nav-link[id="' + historical + '"]').attr('href', '/Region/' + region);  
+            $('.nav-link[id="' + learn + '"]').attr('href', '/Learn/' + region);  
+            $('.nav-link[id="' + course + '"]').attr('href', '/Course/' + region);  
+        });  
+    </script>  
+}
