@@ -13,12 +13,10 @@ namespace User.Controllers
         private readonly HistoryMadeSimpleContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly GroqService _groqService;
-        public ChatBotController(AzureOpenAIService aiService, HistoryMadeSimpleContext context, UserManager<ApplicationUser> userManager, OpenAIService openAiService, GroqService groqService)
+        public ChatBotController( HistoryMadeSimpleContext context, UserManager<ApplicationUser> userManager,  GroqService groqService)
         {
-            _aiService = aiService;
             _context = context;
             _userManager = userManager;
-            _openAiService = openAiService;
             _groqService = groqService;
         }
 

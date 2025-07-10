@@ -15,6 +15,8 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<HistoryMadeSimpleContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.WebHost.UseUrls("http://0.0.0.0:" + (Environment.GetEnvironmentVariable("PORT") ?? "8080"));
+
 // Add ASP.NET Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
@@ -50,9 +52,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 
-builder.Services.AddScoped<AzureOpenAIService>();
 builder.Services.AddHttpClient();
-builder.Services.AddHttpClient<OpenAIService>();
 builder.Services.AddHttpClient<GroqService>();
 
 var app = builder.Build();
